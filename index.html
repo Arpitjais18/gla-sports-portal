@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SportsFest 2026 — GLA University</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <!-- redirect to login if not logged in -->
+  <script>
+    const __user = localStorage.getItem("user");
+    if (!__user) window.location.href = "login.html";
+  </script>
+
+  <!-- ══════════════════════════ NAVBAR ══════════════════════════ -->
+  <header class="navbar">
+    <div class="nav-inner">
+
+      <!-- Left: portal name -->
+      <div class="nav-brand">
+        <span class="brand-pip"></span>
+        <div>
+          <div class="brand-title">SportsFest 2026</div>
+          <div class="brand-sub">Annual Sports Meet</div>
+        </div>
+      </div>
+
+      <!-- Center: nav links -->
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-btn active" onclick="showPage('home')">Home</button>
+        <button class="nav-btn" onclick="showPage('events')">Events</button>
+        <button class="nav-btn" onclick="showPage('myEvents')">My Registrations</button>
+        <button class="nav-btn" onclick="showPage('schedule')">Schedule</button>
+        <button class="nav-btn" onclick="showPage('results')">Results</button>
+        <button class="nav-btn" onclick="showPage('about')">About</button>
+      </nav>
+
+      <!-- Right: user info + logout -->
+      <div class="nav-right">
+        <div class="user-pill">
+          <span class="user-icon">👤</span>
+          <span class="user-roll" id="navRoll">—</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+
+        <!-- GLA Logo -->
+        <div class="college-logo">
+          <div class="logo-emblem">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+              <circle cx="19" cy="19" r="18" stroke="#1a6b3a" stroke-width="2"/>
+              <polygon points="19,6 31,30 7,30" fill="none" stroke="#1a6b3a" stroke-width="2"/>
+              <circle cx="19" cy="19" r="5" fill="#1a6b3a"/>
+              <circle cx="19" cy="19" r="2.5" fill="white"/>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <div class="logo-name">GLA</div>
+            <div class="logo-full">University</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══════════════════════════ PAGES ══════════════════════════ -->
+
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <div class="hero-eyebrow"><span class="eyebrow-pip"></span>GLA University Presents</div>
+        <h1 class="hero-title">Annual<br/><em>Sports Fest</em><br/>2026</h1>
+        <p class="hero-desc">Three days of competition, sportsmanship, and glory. Register for your event and make your department proud.</p>
+        <div class="hero-meta">📅 May 9 – 16, 2026 &nbsp;·&nbsp; 📍 GLA Campus, Mathura</div>
+        <div class="hero-btns">
+          <button class="btn btn-primary" onclick="showPage('events')">Browse Events</button>
+          <button class="btn btn-ghost" onclick="showPage('myEvents')">My Registrations →</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="trophy-card">
+          <div class="tc-icon">🏆</div>
+          <div class="tc-label">Overall Championship</div>
+          <div class="tc-value">Awaiting Champion</div>
+        </div>
+        <div class="mini-stats">
+          <div class="ms-item"><span class="ms-n">12</span><span class="ms-l">Events</span></div>
+          <div class="ms-item"><span class="ms-n">8</span><span class="ms-l">Depts</span></div>
+          <div class="ms-item"><span class="ms-n">3</span><span class="ms-l">Days</span></div>
+          <div class="ms-item"><span class="ms-n">240+</span><span class="ms-l">Athletes</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upcoming events strip -->
+    <section class="home-sec">
+      <div class="sec-header">
+        <h2 class="sec-title">Upcoming <span>Events</span></h2>
+        <button class="text-link" onclick="showPage('events')">View all →</button>
+      </div>
+      <div class="ev-grid" id="home-events"></div>
+    </section>
+
+    <!-- Announcements -->
+    <section class="home-sec alt">
+      <div class="sec-header"><h2 class="sec-title">📢 Announcements</h2></div>
+      <div id="home-announcements"></div>
+    </section>
+  </div>
+
+  <!-- EVENTS -->
+  <div id="page-events" class="page">
+    <div class="page-head">
+      <h1 class="page-title">All <span>Events</span></h1>
+      <p class="page-sub">Click an event card to register</p>
+    </div>
+    <div class="filter-bar">
+      <button class="chip active" onclick="filterEv('all',this)">All</button>
+      <button class="chip" onclick="filterEv('outdoor',this)">⛅ Outdoor</button>
+      <button class="chip" onclick="filterEv('indoor',this)">🏠 Indoor</button>
+      <button class="chip" onclick="filterEv('team',this)">👥 Team</button>
+      <button class="chip" onclick="filterEv('individual',this)">🏃 Individual</button>
+      <button class="chip" onclick="filterEv('upcoming',this)">Upcoming</button>
+      <button class="chip" onclick="filterEv('ongoing',this)">Ongoing</button>
+      <button class="chip" onclick="filterEv('completed',this)">Completed</button>
+    </div>
+    <div class="ev-grid wide" id="all-events"></div>
+  </div>
+
+  <!-- REGISTER MODAL -->
+  <div class="modal-overlay" id="reg-modal" onclick="closeRegModal(event)">
+    <div class="modal-box" id="reg-modal-content"></div>
+  </div>
+
+  <!-- MY REGISTRATIONS -->
+  <div id="page-myEvents" class="page">
+    <div class="page-head">
+      <h1 class="page-title">My <span>Registrations</span></h1>
+      <p class="page-sub">Events you have registered for</p>
+    </div>
+    <div class="table-section" id="my-reg-wrap">
+      <div class="loading-state">Loading your registrations...</div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div id="page-schedule" class="page">
+    <div class="page-head">
+      <h1 class="page-title">Event <span>Schedule</span></h1>
+      <p class="page-sub">All timings are IST — report 15 minutes early</p>
+    </div>
+    <div class="sched-wrap" id="sched-content"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="page-results" class="page">
+    <div class="page-head">
+      <h1 class="page-title">Event <span>Results</span></h1>
+      <p class="page-sub">Results for completed events</p>
+    </div>
+    <div class="results-wrap" id="results-content"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="page-about" class="page">
+    <div class="page-head">
+      <h1 class="page-title">About <span>SportsFest</span></h1>
+      <p class="page-sub">GLA University Sports Committee</p>
+    </div>
+    <div class="about-wrap">
+      <div class="about-intro">
+        <p>The Sports Committee of <strong>GLA University, Mathura</strong> organises SportsFest every year to foster teamwork, physical fitness, and healthy competition among students. SportsFest 2026 features 12 events across 3 days with participation from all departments.</p>
+      </div>
+      <h2 class="inner-title">Meet the <span>Committee</span></h2>
+      <div class="team-grid" id="team-grid"></div>
+
+      <h2 class="inner-title" style="margin-top:3rem;">Contact <span>Us</span></h2>
+      <div class="form-card" style="margin-top:1rem;">
+        <div class="form-row2">
+          <div class="fg"><label>Name</label><input type="text" placeholder="Your name"/></div>
+          <div class="fg"><label>Email</label><input type="email" placeholder="you@gla.ac.in"/></div>
+        </div>
+        <div class="fg"><label>Message</label><textarea rows="4" placeholder="Your query..."></textarea></div>
+        <button class="btn btn-primary" onclick="alert('Message sent! We will get back to you.')">Send Message</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">SportsFest 2026 — GLA University, Mathura</div>
+      <div class="footer-links">
+        <span onclick="showPage('home')">Home</span>
+        <span onclick="showPage('events')">Events</span>
+        <span onclick="showPage('about')">Contact</span>
+      </div>
+      <div class="footer-copy">© 2026 GLA University Sports Committee. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
